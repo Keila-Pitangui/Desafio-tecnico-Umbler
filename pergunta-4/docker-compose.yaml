@@ -1,18 +1,20 @@
+# OS: Fedora 
+
 services:
 #proxy
   app:
     image: nginx:alpine
     container_name: nginx
     ports:
-      - "8080:80"
+      - "80:80"
       # Certificado SSL 
       # - "443:443"
     volumes:
-      - ./app:/var/www/html:ro
+      - ./app:/var/www/html:Z
       # certificado SSL (para proxy reverso)
       # - /var/www/certbot:/var/www/certbot:ro
       # - ./certs:/etc/certs:ro
-      - ./nginx.config:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:Z #mudar contexto do Selinux para o docker conseguir acessar o arquivo.
     depends_on:
       - php
 
@@ -21,7 +23,7 @@ services:
     image: php:8.2-fpm-alpine
     container_name: php
     volumes:
-      - ./app:/var/www/html:ro
+      - ./app:/var/www/html
 
 # banco de dados
   mariadb:
